@@ -1,7 +1,15 @@
+import openai
+import os
+from dotenv import load_dotenv, find_dotenv
+import google.generativeai as genai
+_ = load_dotenv(find_dotenv())
+
 class LLMs :
   
   def response (llm_model, prompt) :
-    if llm_model == 'gpt_3.5' :
+    print("in response")
+    if llm_model == "gpt-3.5" :
+      print("in if")
       LLMs.gpt_response(prompt)
     if llm_model == 'gemini' :
       LLMs.gemini_response(prompt)
@@ -14,10 +22,7 @@ class LLMs :
     
 
   def gpt_response(prompt, temperature=0) :
-    import openai
-    import os
-    from dotenv import load_dotenv, find_dotenv
-    _ = load_dotenv(find_dotenv())
+    print("in gpt")
     openai.api_key  = os.getenv('OPENAI_API_KEY')
     client = openai.OpenAI()
     messages = [{"role": "user", "content": prompt}]
@@ -25,20 +30,12 @@ class LLMs :
     return response.choices[0].message.content
   
   def gemini_response(prompt) :
-    import os
-    from dotenv import load_dotenv, find_dotenv
-    import google.generativeai as genai
-    _ = load_dotenv(find_dotenv())
     genai.configure(api_key= os.getenv('GOOGLE_API_KEY'))
     model = genai.GenerativeModel('gemini-pro')
     response = model.generate_content(prompt, stream=False)
     return response.text
   
   def palm_response(prompt) :
-    import os
-    from dotenv import load_dotenv, find_dotenv
-    import google.generativeai as genai
-    _ = load_dotenv(find_dotenv())
     genai.configure(api_key= os.getenv('GOOGLE_API_KEY'))
     model = genai.GenerativeModel('text-bison-001')
     response = model.generate_content(prompt, stream=False)
@@ -51,3 +48,8 @@ class LLMs :
   def mistral_response():
 
     return
+  
+
+
+
+############################# TEST #####################################
