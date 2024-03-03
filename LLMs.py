@@ -4,6 +4,9 @@ from dotenv import load_dotenv, find_dotenv
 import google.generativeai as genai
 _ = load_dotenv(find_dotenv())
 
+from transformers import AutoModelForCausalLM
+from transformers import AutoTokenizer
+
 class LLMs :
   
   def Response (llm_model, prompt, temperature, max_token) :
@@ -29,7 +32,15 @@ class LLMs :
   def gemini_response(prompt,temperature, max_token) :
     genai.configure(api_key= os.getenv('GOOGLE_API_KEY'))
     model = genai.GenerativeModel('gemini-pro')
-    response = model.generate_content(prompt, stream=False)
+    generation_config = genai.GenerationConfig(
+      stop_sequences= None,
+      temperature= temperature,
+      max_output_tokens= max_token
+    )
+    response = model.generate_content(
+      contents=prompt,
+      generation_config= generation_config,
+      stream=False)
     return response.text
   
   def palm_response(prompt,temperature, max_token) :
@@ -44,7 +55,14 @@ class LLMs :
   
   def mistral_response(prompt,temperature, max_token):
 
-    return
+    model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-v0.1", device_map="auto", load_in_4bit=True)
+    tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-v0.1", padding_side="left")
+    model_inputs = tokenizer([prompt], return_tensors="pt").to("cuda")
+    # Setting `max_new_tokens` allows you to control the maximum length
+    generated_ids = model.generate(**model_inputs, max_new_tokens=max_token)
+    response = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
+
+    return response
   
 
 

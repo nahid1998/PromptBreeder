@@ -37,7 +37,7 @@ class Evolution :
       return population
     
    def Evaluate_fitness(population, qa_dataset, llm_model, dataset_name, epoch) :
-      population_fitness = []
+      population = [[p[0], p[1], p[2], p[3], -1] for p in population]
       for index, p in enumerate(population) :
          print("population : " + str(index))
          p_fit = 0
@@ -66,8 +66,8 @@ class Evolution :
             
             if evaluate == "yes" or evaluate == "Yes" :
                p_fit += 1
-         #population_fitness.append([p[0], p[1], p[2], p[3], (p_fit / len(qa_dataset))])
-         population[index].append((p_fit / len(qa_dataset))) 
+         
+         population[index][4] = ((p_fit / len(qa_dataset))) 
          df_population = pd.DataFrame(population)
          df_population.columns = ['task_prompt1', 'mutation_prompt1', 'task_prompt2', 'mutation_prompt2', 'fitness']
          file_path = llm_model + "_on_" + dataset_name + "/population_fitness_" + str(epoch) + ".csv"
