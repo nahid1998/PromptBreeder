@@ -16,7 +16,6 @@ class Direct_mutation :
         return response
 
     def First_order_Prompt_Generation(llm_model, mutation_prompt, task_prompt) :
-        print("in mutation")
         prompt = mutation_prompt + "   INSTRUCTION: " + task_prompt + "   INSTRUCTION MUTANT: "
         response = LLMs.Response(llm_model, prompt, temperature=0, max_token=50)
         return response
@@ -131,7 +130,35 @@ class Estimation_of_Distribution_mutation :
         response = LLMs.Response(llm_model,prompt, 1, 2500)
         return response
 
+class HyperMutation :
 
-
-
+    def Zero_Order_Hyper_Mutation(llm_model, problem_description, thinking_style, task_prompt, epoch = 0):
+        prompt = problem_description + ". " + thinking_style
+        new_mutation_prompt = LLMs.Response(llm_model, prompt, 0, 50)
+        print("new_mutation_prompt")
+        print(new_mutation_prompt)
+        new_task_prompt = Direct_mutation.First_order_Prompt_Generation(llm_model, new_mutation_prompt, task_prompt)
+        return new_task_prompt, new_mutation_prompt
     
+    def First_Order_Hyper_Mutation(llm_model, task_prompt, mutation_prompt, epoch = 0):
+        prompt = "Please summarize and improve the following instruction: " + mutation_prompt
+        new_mutation_prompt = LLMs.Response(llm_model, prompt, 1, 50)
+        print("new_mutation_prompt")
+        print(new_mutation_prompt)
+        new_task_prompt = Direct_mutation.First_order_Prompt_Generation(llm_model, new_mutation_prompt, new_task_prompt)
+        return new_task_prompt, new_mutation_prompt
+
+class Lamarckian_mutation :
+
+    def Working_out_to_task_prompt(llm_model, working_out1, working_out2, epoch) :
+        p_l_1 = "I gave a friend an instruction and some advice. Here are the correct examples of his workings out:" 
+        q1 = "Question 1 : " + working_out1[0]
+        a1 = "Answer 1 : " + working_out1[1]
+        q2 = "Question 2 : " + working_out2[0]
+        a2 = "Answer 2 : " + working_out2[1]
+        p_l_2 = "The instruction was:"
+
+        prompt = p_l_1 + "\n" + q1 + "\n" + a1 + "\n\n" + q2 + "\n" + a2 + "\n\n" + p_l_2
+        l_task_prompt = LLMs.Response(llm_model, prompt, 1, 50)
+        return l_task_prompt
+

@@ -115,10 +115,54 @@ for e in range(epochs) :
             # Append the choosen task-prompt and its mutated-task-prompt 
             mutated_population.append([p[0],p[1],p[2],p[3]], [m_1,p[1],m_2,p[3]])  
 
-        # if switch == 5 :
+    if switch == 5 : # ZERO-ORDER HYPER-MUTATION
+        df_t = pd.read_csv('thinking_styles.csv')
+        thinking_styles = df_t.to_numpy().flatten()
+        for i in range(population_size/2): 
+            # compare fitness and choose the one with higher fitness
+            if population_fitness[i][4] > population_fitness[i + (population_size/2)][4] :
+                p = population_fitness[i]
+            else :
+                p = population_fitness[i + (population_size/2)]
+            t_1, m_1= Mutation.HyperMutation.Zero_Order_Hyper_Mutation(
+                llm_model=llm_model, 
+                problem_description=problem_description,
+                thinking_style=thinking_styles[random.randint(len(thinking_styles))],
+                task_prompt=p[0],
+                epoch=e)
+            t_2, m_2 = Mutation.HyperMutation.Zero_Order_Hyper_Mutation(
+                llm_model=llm_model, 
+                problem_description=problem_description,
+                thinking_style=thinking_styles[random.randint(len(thinking_styles))],
+                task_prompt=p[2],
+                epoch=e)
+            # Append the choosen task-prompt and its mutated-task-prompt 
+            mutated_population.append([p[0],p[1],p[2],p[3]], [t_1,m_1,t_2,m_2])  
 
-        # if switch == 6 :
+    if switch == 6 : # FIRST-ORDER HYPER-MUTATION
+        for i in range(population_size/2): 
+            # compare fitness and choose the one with higher fitness
+            if population_fitness[i][4] > population_fitness[i + (population_size/2)][4] :
+                p = population_fitness[i]
+            else :
+                p = population_fitness[i + (population_size/2)]
+            t_1, m_1 = Mutation.HyperMutation.First_Order_Hyper_Mutation(llm_model, p[0], p[1], e)
+            t_2, m_2 = Mutation.HyperMutation.First_Order_Hyper_Mutation(llm_model, p[2], p[3], e)
+            # Append the choosen task-prompt and its mutated-task-prompt 
+            mutated_population.append([p[0],p[1],p[2],p[3]], [t_1,m_1,t_2,m_2])  
 
-        # if switch == 7 :
+    if switch == 7 : # LAMARCKIAN MUTATION
+        for i in range(population_size/2): 
+            # compare fitness and choose the one with higher fitness
+            if population_fitness[i][4] > population_fitness[i + (population_size/2)][4] :
+                p = population_fitness[i]
+            else :
+                p = population_fitness[i + (population_size/2)]
+            r_workingout = random.randint(0,(len(train_list)-1))
+            t_1 = Mutation.Lamarckian_mutation.Working_out_to_task_prompt(llm_model, train_list[r_workingout], train_list[r_workingout + 1], e)
+            r_workingout = random.randint(0,(len(train_list)-1))
+            t_2 = Mutation.Lamarckian_mutation.Working_out_to_task_prompt(llm_model, train_list[r_workingout], train_list[r_workingout + 1], e)
+            # Append the choosen task-prompt and its mutated-task-prompt 
+            mutated_population.append([p[0],p[1],p[2],p[3]], [t_1,p[1],t_2,p[3]]) 
 
         # if switch == 8 :        
