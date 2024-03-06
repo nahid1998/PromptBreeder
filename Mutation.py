@@ -6,6 +6,7 @@ import torch.nn.functional as F
 
 import pandas as pd
 import numpy as np
+import random
 
 
 class Direct_mutation :
@@ -20,7 +21,6 @@ class Direct_mutation :
         response = LLMs.Response(llm_model, prompt, temperature=0, max_token=50)
         return response
     
-
 class Estimation_of_Distribution_mutation :
 
     def _filter_population(population):
@@ -161,4 +161,22 @@ class Lamarckian_mutation :
         prompt = p_l_1 + "\n" + q1 + "\n" + a1 + "\n\n" + q2 + "\n" + a2 + "\n\n" + p_l_2
         l_task_prompt = LLMs.Response(llm_model, prompt, 1, 50)
         return l_task_prompt
+
+class P_and_C :
+    
+    def Prompt_Crossover(llm_model, mutated_population, epoch):
+        cross_over_population = []
+        np.random.shuffle(mutated_population)
+        for i in range((len(mutated_population) / 2)) :
+            c = random.randint(0,10)
+            if c == 0 :
+                p1 = mutated_population[i]
+                p2 = mutated_population[(i + (len(mutated_population) / 2))]
+                cross_over_population.append([p1[0], p2[1], p1[2], p2[3]])
+                cross_over_population.append([p2[0], p1[1], p2[2], p1[3]])
+            else :
+                cross_over_population.append([p1[0], p1[1], p1[2], p1[3]])
+                cross_over_population.append([p2[0], p2[1], p2[2], p2[3]])
+        return cross_over_population
+
 

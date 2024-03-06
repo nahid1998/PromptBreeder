@@ -56,10 +56,11 @@ else :
 print(len(population))
 
 # Evaluate fitness
-population_fitness = Evolution.Evolution.Evaluate_fitness(population[:20], train_list, llm_model,dataset_name, 0)
+population = Evolution.Evolution.Evaluate_fitness(population[:20], train_list, llm_model,dataset_name, 0)
 
-# DO Mutation
+###### ITTERATION LOOP
 for e in range(epochs) :
+    ######  DO MUTATION
     mutated_population = []
     switch = random.randint(0,9)
     if switch == 0 : # ZERO ORDER PROMPT GENERATION
@@ -67,10 +68,10 @@ for e in range(epochs) :
 
     if switch == 1 : # FIRST ORDER PROMPT GENERATION 
         for i in range(population_size/2):
-            if population_fitness[i][4] > population_fitness[i + (population_size/2)][4] : # compare fitness and choose the one with higher fitness
-                p = population_fitness[i]
+            if population[i][4] > population[i + (population_size/2)][4] : # compare fitness and choose the one with higher fitness
+                p = population[i]
             else :
-                p = population_fitness[i + (population_size/2)]
+                p = population[i + (population_size/2)]
             m_1 = Mutation.Direct_mutation.First_order_Prompt_Generation(llm_model, p[1], p[0])
             m_2 = Mutation.Direct_mutation.First_order_Prompt_Generation(llm_model, p[3], p[2])
             # Append the choosen task-prompt and its mutated-task-prompt 
@@ -80,10 +81,10 @@ for e in range(epochs) :
         filtered_list, len_f_p = Mutation.Estimation_of_Distribution_mutation.Filtered_List(population)
         for i in range(population_size/2): 
             # compare fitness and choose the one with higher fitness
-            if population_fitness[i][4] > population_fitness[i + (population_size/2)][4] :
-                p = population_fitness[i]
+            if population[i][4] > population[i + (population_size/2)][4] :
+                p = population[i]
             else :
-                p = population_fitness[i + (population_size/2)]
+                p = population[i + (population_size/2)]
             m_1 = Mutation.Estimation_of_Distribution_mutation.EDA_Mutation(llm_model, filtered_list, p[1], e)
             m_2 = Mutation.Estimation_of_Distribution_mutation.EDA_Mutation(llm_model, filtered_list, p[3], e)
             # Append the choosen task-prompt and its mutated-task-prompt 
@@ -93,10 +94,10 @@ for e in range(epochs) :
         filtered_list, len_f_p = Mutation.Estimation_of_Distribution_mutation.Filtered_List(population, True)
         for i in range(population_size/2): 
             # compare fitness and choose the one with higher fitness
-            if population_fitness[i][4] > population_fitness[i + (population_size/2)][4] :
-                p = population_fitness[i]
+            if population[i][4] > population[i + (population_size/2)][4] :
+                p = population[i]
             else :
-                p = population_fitness[i + (population_size/2)]
+                p = population[i + (population_size/2)]
             m_1 = Mutation.Estimation_of_Distribution_mutation.EDA_Rank_Index_Mutation(llm_model, filtered_list, len_f_p, p[1], e)
             m_2 = Mutation.Estimation_of_Distribution_mutation.EDA_Rank_Index_Mutation(llm_model, filtered_list, len_f_p, p[3], e)
             # Append the choosen task-prompt and its mutated-task-prompt 
@@ -106,10 +107,10 @@ for e in range(epochs) :
         list_best_so_far = Mutation.Estimation_of_Distribution_mutation.List_Best_So_Far(best_so_fars)
         for i in range(population_size/2): 
             # compare fitness and choose the one with higher fitness
-            if population_fitness[i][4] > population_fitness[i + (population_size/2)][4] :
-                p = population_fitness[i]
+            if population[i][4] > population_[i + (population_size/2)][4] :
+                p = population[i]
             else :
-                p = population_fitness[i + (population_size/2)]
+                p = population[i + (population_size/2)]
             m_1 = Mutation.Estimation_of_Distribution_mutation.Lineage_Based_Mutation(llm_model, list_best_so_far, p[1], e)
             m_2 = Mutation.Estimation_of_Distribution_mutation.Lineage_Based_Mutation(llm_model, list_best_so_far, p[3], e)
             # Append the choosen task-prompt and its mutated-task-prompt 
@@ -120,10 +121,10 @@ for e in range(epochs) :
         thinking_styles = df_t.to_numpy().flatten()
         for i in range(population_size/2): 
             # compare fitness and choose the one with higher fitness
-            if population_fitness[i][4] > population_fitness[i + (population_size/2)][4] :
-                p = population_fitness[i]
+            if population[i][4] > population[i + (population_size/2)][4] :
+                p = population[i]
             else :
-                p = population_fitness[i + (population_size/2)]
+                p = population[i + (population_size/2)]
             t_1, m_1= Mutation.HyperMutation.Zero_Order_Hyper_Mutation(
                 llm_model=llm_model, 
                 problem_description=problem_description,
@@ -142,10 +143,10 @@ for e in range(epochs) :
     if switch == 6 : # FIRST-ORDER HYPER-MUTATION
         for i in range(population_size/2): 
             # compare fitness and choose the one with higher fitness
-            if population_fitness[i][4] > population_fitness[i + (population_size/2)][4] :
-                p = population_fitness[i]
+            if population[i][4] > population[i + (population_size/2)][4] :
+                p = population[i]
             else :
-                p = population_fitness[i + (population_size/2)]
+                p = population[i + (population_size/2)]
             t_1, m_1 = Mutation.HyperMutation.First_Order_Hyper_Mutation(llm_model, p[0], p[1], e)
             t_2, m_2 = Mutation.HyperMutation.First_Order_Hyper_Mutation(llm_model, p[2], p[3], e)
             # Append the choosen task-prompt and its mutated-task-prompt 
@@ -154,10 +155,10 @@ for e in range(epochs) :
     if switch == 7 : # LAMARCKIAN MUTATION
         for i in range(population_size/2): 
             # compare fitness and choose the one with higher fitness
-            if population_fitness[i][4] > population_fitness[i + (population_size/2)][4] :
-                p = population_fitness[i]
+            if population[i][4] > population[i + (population_size/2)][4] :
+                p = population[i]
             else :
-                p = population_fitness[i + (population_size/2)]
+                p = population[i + (population_size/2)]
             r_workingout = random.randint(0,(len(train_list)-1))
             t_1 = Mutation.Lamarckian_mutation.Working_out_to_task_prompt(llm_model, train_list[r_workingout], train_list[r_workingout + 1], e)
             r_workingout = random.randint(0,(len(train_list)-1))
@@ -165,4 +166,10 @@ for e in range(epochs) :
             # Append the choosen task-prompt and its mutated-task-prompt 
             mutated_population.append([p[0],p[1],p[2],p[3]], [t_1,p[1],t_2,p[3]]) 
 
-        # if switch == 8 :        
+    if switch == 8 : # PROMPT CROSS-OVER
+        mutated_population = Mutation.P_and_C.Prompt_Crossover(llm_model, population, e)
+
+    #if switch == 9 : # CONTEXT SHUFFLING
+    
+    ###### EVALUATE NEW POPULATION
+    population = Evolution.Evolution.Evaluate_fitness(mutated_population, train_list, llm_model, dataset_name, e + 1)
