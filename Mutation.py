@@ -94,7 +94,7 @@ class Estimation_of_Distribution_mutation :
         prompt = "INSTRUCTION: " + mutation_prompt + "\n A List of Responses in descending order of score." + str(len_filtered_population + 1) + "is the best response. It resembles" + str(len_filtered_population) + "more than it does (1)\n\n\n" + filtered_list
         print("PROMPT :")
         print(prompt)
-        response = LLMs.Response(llm_model,prompt, 1, 2500)
+        response = LLMs.Response(llm_model,prompt, 1, 50)
         return response
     
     
@@ -145,7 +145,7 @@ class HyperMutation :
         new_mutation_prompt = LLMs.Response(llm_model, prompt, 1, 50)
         print("new_mutation_prompt")
         print(new_mutation_prompt)
-        new_task_prompt = Direct_mutation.First_order_Prompt_Generation(llm_model, new_mutation_prompt, new_task_prompt)
+        new_task_prompt = Direct_mutation.First_order_Prompt_Generation(llm_model, new_mutation_prompt, task_prompt)
         return new_task_prompt, new_mutation_prompt
 
 class Lamarckian_mutation :
